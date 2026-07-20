@@ -237,6 +237,16 @@
     </button>
   </form>
 
+  <!-- RECENT QUICK LOGS FEED -->
+  <section class="mt-6 pt-5 border-t border-[var(--border-color)]">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Recent Local Logs</span>
+      <button onclick="clearLocalStorage()" class="text-[9px] font-bold text-red-500 hover:underline">Clear Feed</button>
+    </div>
+    <div id="recent-logs-feed" class="flex flex-col gap-2">
+      <!-- Items added dynamically by JS -->
+    </div>
+  </section>
 
 </div>
 
