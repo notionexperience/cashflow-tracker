@@ -671,7 +671,12 @@
     openDropdown.close();
   });
   window.addEventListener('resize', function () { if (openDropdown) openDropdown.close(); });
-  window.addEventListener('scroll', function () { if (openDropdown) openDropdown.close(); }, true);
+  window.addEventListener('scroll', function (e) {
+    if (!openDropdown) return;
+    // Ignore scrolling that happens inside the dropdown list itself
+    if (openDropdown.menu.contains(e.target)) return;
+    openDropdown.close();
+  }, true);
 
   /* ---------- Form logic ---------- */
   var state = { type: null };
