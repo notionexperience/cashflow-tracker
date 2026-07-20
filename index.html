@@ -237,17 +237,6 @@
     </button>
   </form>
 
-  <!-- RECENT QUICK LOGS FEED -->
-  <section class="mt-6 pt-5 border-t border-[var(--border-color)]">
-    <div class="flex items-center justify-between mb-3">
-      <span class="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Recent Local Logs</span>
-      <button onclick="clearLocalStorage()" class="text-[9px] font-bold text-red-500 hover:underline">Clear Feed</button>
-    </div>
-    <div id="recent-logs-feed" class="flex flex-col gap-2">
-      <!-- Items added dynamically by JS -->
-    </div>
-  </section>
-
 </div>
 
 <!-- NOTIFICATION TOAST BAR -->
@@ -460,66 +449,6 @@ function submitLedgerEntry() {
     submitBtn.style.opacity = "1";
     submitText.textContent = `Post ${currentType} to Notion`;
   });
-}
-
-// --- Feed Cache Operations ---
-function saveLocalLog(entry) {
-  loggedFeed.unshift(entry);
-  if(loggedFeed.length > 5) loggedFeed.pop(); // Keep to last 5 entries
-  localStorage.setItem('quick_feed_notion', JSON.stringify(loggedFeed));
-  renderFeed();
-}
-
-function renderFeed() {
-  const feed = document.getElementById('recent-logs-feed');
-  if (loggedFeed.length === 0) {
-    feed.innerHTML = `<div class="text-xs text-center py-6 text-[var(--text-secondary)]">No entry has been logged yet this session</div>`;
-    return;
-  }
-
-  feed.innerHTML = loggedFeed.map((e) => {
-    let subDetail = "";
-    let colorClass = "";
-    let symb = "";
-    
-    if (e.type === 'Income') {
-      subDetail = `${e.incomeCategory} ➔ ${e.account}`;
-      colorClass = "text-emerald-500 dark:text-emerald-400";
-      symb = "+";
-    } else if (e.type === 'Expense') {
-      subDetail = `${e.expenseCategory} ➔ ${e.account}`;
-      colorClass = "text-rose-500 dark:text-rose-400";
-      symb = "-";
-    } else {
-      subDetail = `${e.fromAccount} ➔ ${e.toAccount}`;
-      colorClass = "text-indigo-500 dark:text-indigo-400";
-    }
-
-    const fmtDate = new Date(e.date).toLocaleDateString("en-GB", {day: "numeric", month: "short"});
-
-    return `
-      <div class="flex items-center justify-between p-3 rounded-xl border border-[var(--border-color)] bg-[var(--card-hover)] text-xs transition-colors hover:bg-[var(--bg-inset)]">
-        <div class="flex items-center gap-2.5">
-          <div class="font-bold text-[10px] uppercase text-[var(--text-secondary)] bg-[var(--bg-inset)] px-1.5 py-0.5 rounded">${fmtDate}</div>
-          <div>
-            <div class="font-bold text-[var(--text-primary)]">${e.description}</div>
-            <div class="text-[10px] text-[var(--text-secondary)] font-medium">${subDetail}</div>
-          </div>
-        </div>
-        <div class="text-right">
-          <span class="font-bold font-mono ${colorClass}">${symb}€${parseFloat(e.amount).toFixed(2)}</span>
-          <div class="text-[9px] text-[var(--text-secondary)]">${e.type}</div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function clearLocalStorage() {
-  loggedFeed = [];
-  localStorage.removeItem('quick_feed_notion');
-  renderFeed();
-  showTriggerToast("Recent memory cleared", "🧹");
 }
 
 // --- Dynamic Toast Modals ---
